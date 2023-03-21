@@ -1,32 +1,22 @@
 version: "3"
 services:
-  front-end:
-    build: frontend/
-    restart: always
+  todotests:
+    image: todotests
+    depends_on:
+      - todofront 
+      - todoback
+    environment:
+      - FRONT_HOST=frontend
+  todofront:
+    image: todofrontend
     ports:
       - 3000:3000
-    depends_on:
-      - backend
-    volumes:
-      - ./logs:/var/log/frontend
-    networks:
-      - rede-virtual-1
-  backend:
-    build: backend/
-    restart: always
-    ports:
-      - 3001:3001
     environment:
-      - DB_HOST=database
+      - REACT_APP_API_HOST= backend
     depends_on:
-      - database
-    networks:
-      - rede-virtual-1
-      - rede-virtual-2
-  database:
-    image: betrybe/docker-compose-example-database:v1
-    restart: always
-    volumes:
-      - dados-do-banco:/data/db
-    networks:
-      - rede-virtual-2
+      - todoback
+  todoback:
+     image: todobackend
+     ports:
+      - 3001:3001
+    
